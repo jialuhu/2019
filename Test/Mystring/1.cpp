@@ -7,30 +7,50 @@
 
 #include<iostream>
 #include<string>
-#include<initializer_list>
 using namespace std;
-void sum(initializer_list<int> il)
-{
-    cout << il.size() << "&&&"<<endl;
-    for(auto p=il.begin(); p!=il.end(); p++)
-    {
-        cout << *p << endl;
-    }
-}
-void fun(void *s)
-{
-}
 int main()
 {
-    string a("hujialu");
-    string b(a,1);
-    cout << b<< endl;
-    sum({0,9,8});
-    string s;
-    char S[10];
-    int i=0;
-    int pos = 10;
-    int len = 10;
+    int n;
+    int num;
+    cin>>num;
+    while(num--)
+    {
+        cin>>n;
+        int n4=0,n2=0,n1=0;
+        while(n--)
+        {
+            int temp=0;
+            cin>>temp;
+            if(temp%4==0)
+                n4++;
+            else if(temp%2==0)
+                n2++;
+            else
+                n1++;
+        }
+        if(n2==0)
+        {
+            if(n4>=n1-1)
+            {
+                printf("Yes\n");
+            }
+            else
+            {
+                printf("No\n");
+            }
+        }
+        else
+        {
+            if(n4>=n1)
+            {
+                printf("Yes\n");
+            }
+            else
+            {
+                printf("No\n");
+            }
+        }
+    }
     return 0;
 }
 
