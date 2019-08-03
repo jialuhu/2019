@@ -32,7 +32,6 @@ void EventLoop::quit() {
 }
 
 void EventLoop::updateChannel(Channel* channel) {
-    std::cout << "999\n";
     assert(channel->ownerloop()==this);
     Kqueue_ -> updateChannel(channel);
 }
