@@ -13,6 +13,7 @@ EventLoop ::EventLoop() :
         threadId_(std::this_thread::get_id()),
         Kqueue_(new Kqueue(this))
        {
+    std::cout << "EventLoop: " <<this << std::endl;
     //判断是否是属于本线程
     if(t_loopInThisThread){
         std::cout << "This thread is used\n";
@@ -23,6 +24,7 @@ EventLoop ::EventLoop() :
 }
 
 EventLoop :: ~EventLoop(){
+    std::cout << "Eventloop析构函数\n";
     assert(!looping_);
     t_loopInThisThread = NULL;
 }
@@ -33,6 +35,8 @@ void EventLoop::quit() {
 
 void EventLoop::updateChannel(Channel* channel) {
     assert(channel->ownerloop()==this);
+    std::cout << "****\n";
+    std::cout << "channel: " << this << std::endl;
     Kqueue_ -> updateChannel(channel);
 }
 
@@ -41,6 +45,7 @@ void EventLoop::loop() {
     looping_ = true;
     quit_ = false;
     while(!quit_){
+        std::cout << "loop\n";
         activeChannel_.clear();
         Kqueue_->kqueue(-1,&activeChannel_);
         auto ends = activeChannel_.end();

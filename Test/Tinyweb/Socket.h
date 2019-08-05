@@ -8,9 +8,11 @@
 #include <sys/socket.h>
 #include <netinet/tcp.h>
 #include <assert.h>
+#include "SocketOpt.h"
 class Socket{
 public:
     explicit Socket(int fd):sockfd_(fd){
+        SocketOpt::setnonblocking(sockfd_);
         assert(sockfd_>0);
     }
     ~Socket(){::close(sockfd_);};

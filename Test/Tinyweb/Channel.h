@@ -41,8 +41,9 @@ public:
     //注册可读事件
     void enableReading(){
         std::cout << "注册可读事件\n";
-        //std::cout << "EVFILE_READ: " << EVFILT_READ << std::endl;
+        std::cout << "EVFILE_READ: " << EVFILT_READ << std::endl;
         event_ |= EVFILT_READ;
+        std::cout << "update\n";
         update();
     }
     //注册可写事件
@@ -100,6 +101,7 @@ private:
     bool isclose;
     int revents_;
     int indx;
+    bool eventHanding_;
 };
 
 

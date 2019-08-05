@@ -15,8 +15,6 @@ Kqueue::~Kqueue(){
     close(kqfd);
 }
 bool Kqueue::Register(Channel* channel,int fd) {
-    std::cout << "kqfd: " << kqfd << " channel: " << channel->event() <<std::endl;
-    std::cout << "fd " << fd << std::endl;
     struct kevent changes[1];
     EV_SET(&changes[0], fd, EVFILT_READ, EV_ADD, 0, 0, NULL);
     kqfds_.push_back(changes[0]);
@@ -64,7 +62,9 @@ bool Kqueue::Change(Channel* channel,int fd){
 }
 
 void Kqueue::updateChannel(Channel* channel) {
+    std::cout << "godod\n";
     int idx = channel->index();
+    std::cout << "fd:" << channel->fd()<<std::endl;
     int kfd = channel -> fd();
     if(idx<0){
         assert(channels_.find(kfd) == channels_.end());

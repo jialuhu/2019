@@ -5,9 +5,10 @@
 #include <sys/event.h>
 #include <sys/unistd.h>
 #include <fcntl.h>
-#include "EventLoop.h"
-#include "Channel.h"
-EventLoop *g_loop;
+#include "Buffer.h"
+#include "TcpConnection.h"
+#include "WebServer.h"
+/*EventLoop *g_loop;
 void fun(){
     std::cout << "hujialu\n";
     g_loop->quit();
@@ -29,5 +30,38 @@ int main() {
     channel.enableReading();
     loop.loop();
     close(fd);
+    return 0;
+}*/
+#include "Acceptor.h"
+#include "EventLoop.h"
+#include "InetAddr.h"
+#include "SocketOpt.h"
+#include "TcpServer.h"
+#include <stdio.h>
+#include <iostream>
+/*void newConnection(int sockfd, InetAddr& peerAddr)
+{
+    printf("newConnection(): accepted a new connection from ");
+    int ret = ::write(sockfd, "How are you?\n", 13);
+    sleep(10);
+    ::close(sockfd);
+}
+
+int main()
+{
+    printf("main(): pid = %d\n", getpid());
+    InetAddr listenAddr(8888);
+    EventLoop loop;
+    Acceptor acceptor(&loop, listenAddr);
+    acceptor.setNewConnectionCallback(newConnection);
+    acceptor.listen();
+    loop.loop();
+}*/
+int main(){
+    EventLoop loop;
+    InetAddr addr(8888);
+    WebServer server(&loop,addr);
+    server.start();
+    loop.loop();
     return 0;
 }
