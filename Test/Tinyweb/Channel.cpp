@@ -9,20 +9,19 @@ Channel ::Channel(EventLoop *eventLoop, int fd) :
         fd_(fd),
         event_(0),
         revents_(0),
+        isclose(false),
+        iswrite(false),
         indx(-1)
         {
-    std::cout << "fd_:" <<fd_<<std::endl;
-    std::cout << "eventloop:" << eloop_<< std::endl;
+
 }
 
 Channel :: ~Channel(){
-    assert(!eventHanding_);
     std::cout << "Channel析构了\n";
 }
 
 //更新时间表
 void Channel :: update() {
-    std::cout << "Channle::channel: " <<this << std::endl;
     eloop_ -> updateChannel(this);
 }
 
@@ -31,24 +30,35 @@ void Channel :: handleEvent() {
     //eventHanding保证在处理事件期间Channel不被析构
     eventHanding_ = true;
     //客户端关闭链接
-    if(revents_ & EVFILT_VNODE ){
+    std::cout << "事件: "<< revents_ << std::endl;
+    std::cout << "关闭状态: " << is_close() << std::endl;
+    if((revents_ == EVFILT_READ) && !is_close()) {
+        if (ReadCallback) {
+            std::cout << "有可以读的事件\n\n";
+            ReadCallback();
+            std::cout << "有可以读的事件\n\n";
+        }
+    }
+    if((revents_ == EVFILT_WRITE) && !is_close()) {
+        std::cout << "EVFILE_WRITE: " << revents_ << std::endl;
+        if (WriteCallback) {
+            std::cout << "进入有写事件\n\n";
+            WriteCallback();
+            std::cout << "进入有写事件\n\n";
+        }
+    }
+    if((flags_ == 32769) && (is_close())){
+        std::cout << "关闭连接\n\n";
+        if(CloseCallback){
+            CloseCallback();
+            std::cout << "关闭连接******\n\n";
+        }
         std::cout << "Client is closed\n";
     }
-    /*if(revents_ & EV_ERROR)
+    if((flags_ == ENOENT) | (flags_==EINVAL) | (flags_==EPIPE) | (flags_==EBADF) )
     {
-        std::cout << "Handle kqueue is wrong\n";
-    }*/
-    if(revents_ & (EVFILT_READ))
-        if(ReadCallback){
-            std::cout << "有可以读的事件\n";
-            std::cout << fd() << "(((((\n";
-            ReadCallback();
-            std::cout << "有可以读的事件\n";
-        }
-    if(revents_ & (EVFILT_WRITE))
-        if(WriteCallback){
-            WriteCallback();
-        }
+        std::cout << "Handle kqueue is wrong!!!\n";
+    }
     eventHanding_ = false;
-        std::cout << "eventHanding: " << eventHanding_ << std::endl;
+    std::cout << "eventHanding: " << eventHanding_ << std::endl;
 }

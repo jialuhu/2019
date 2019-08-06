@@ -61,6 +61,8 @@ CMakeFiles/untitled.dir/WebServer.cpp.o: ../Buffer.h
 CMakeFiles/untitled.dir/WebServer.cpp.o: ../CallBack.h
 CMakeFiles/untitled.dir/WebServer.cpp.o: ../Channel.h
 CMakeFiles/untitled.dir/WebServer.cpp.o: ../EventLoop.h
+CMakeFiles/untitled.dir/WebServer.cpp.o: ../HttpContent.h
+CMakeFiles/untitled.dir/WebServer.cpp.o: ../HttpRespond.h
 CMakeFiles/untitled.dir/WebServer.cpp.o: ../InetAddr.h
 CMakeFiles/untitled.dir/WebServer.cpp.o: ../Socket.h
 CMakeFiles/untitled.dir/WebServer.cpp.o: ../SocketOpt.h

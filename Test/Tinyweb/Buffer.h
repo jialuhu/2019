@@ -72,9 +72,39 @@ public:
         return buf.size();
     }
 
-    char *Buffer_str(){
-        return &*buf.begin();
+    std::string &Buffer_str(std::string &s1){
+        int len = writeindex_-readindex_;
+        char *str;
+        str = new char[len+1];
+        s1.clear();
+        std::copy(buf.begin()+readindex_,buf.begin()+writeindex_,str);
+        s1 = s1+str;
+        return s1;
     }
+
+    bool Buffer_find_str(const char *str,std::string &result,size_t len_){
+        std::cout << "读缓冲区的大小: " << enableRead() <<std::endl;
+        std::string find_string;
+        Buffer_str(find_string);
+        int find = find_string.find(str)+len_;
+        if(find != find_string.npos){
+            result = find_string.substr(0, find);
+            size_t len = result.size();
+            readindex_+=len;
+            if(!enableRead()){
+                //此时已经将数据读完
+                std::cout << "数据已经全部取出\n";
+                readindex_ = 8;
+                writeindex_ = 8;
+                //return true;
+            }
+        } else{
+            result = "\0";
+            return false;
+        }
+        return true;
+    }
+
     void Buffer_display(){
         for(auto &i : buf){
             std::cout << i;

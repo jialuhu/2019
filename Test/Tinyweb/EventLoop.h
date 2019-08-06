@@ -36,7 +36,7 @@ public:
 private:
     boost::scoped_ptr <Kqueue> Kqueue_;
     //boost::scoped_ptr <Epoll> Epoller_;
-    boost::scoped_ptr <Channel> channel_;
+    //boost::scoped_ptr <Channel> channel_;
     std::vector<Channel*> activeChannel_;
 
     bool quit_;

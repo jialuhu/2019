@@ -33,10 +33,7 @@ public:
     void setCloseCb(CloseCallback cb){
         CloseCb_ = std::move(cb);
     }
-    void removeConnection(){
-        std::cout << "removeConnection\n";
-
-    }
+    void removeConnection(const TcpConnectionPtr &conn);
 
 private:
     EventLoop *loop_;

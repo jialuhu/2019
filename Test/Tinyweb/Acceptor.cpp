@@ -9,7 +9,7 @@ Acceptor::Acceptor(EventLoop *loop,
         AcceptorChannle_(new Channel(loop,socket_.sockfd())),
         socket_(SocketOpt::socket())
         {
-    std::cout << "Acceptor is build\n";
+   // std::cout << "Acceptor is build\n";
     addr_.Init();
     SocketOpt::setnonblocking(socket_.sockfd());
     SocketOpt::bind(socket_.sockfd(),addr_.inetaddr());
@@ -32,6 +32,7 @@ void Acceptor::listen() {
 void Acceptor::handleAccept() {
     int connfd = SocketOpt::accept(socket_.sockfd());
     if(connfd > 0){
+        std::cout << "连接成功\n";
         if(_newConnectionCb){
             _newConnectionCb(connfd,addr_);
         }else{

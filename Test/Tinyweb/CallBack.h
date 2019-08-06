@@ -9,7 +9,8 @@
 class TcpConnection;
 class Buffer;
 typedef boost::shared_ptr<TcpConnection> TcpConnectionPtr;
-typedef boost::function<void (const TcpConnectionPtr&)> ConnectionCallback;
-typedef boost::function<void (const TcpConnectionPtr&, Buffer *buf)> OnMessageCallback;
-typedef boost::function<void (int fd)> CloseCallback;
+typedef boost::function<void (const TcpConnectionPtr& conn)> ConnectionCallback;
+typedef boost::function<void (const TcpConnectionPtr&, Buffer &buf)> OnMessageCallback;
+typedef boost::function<void (const TcpConnectionPtr&)> WriteCompleteCallback;
+typedef boost::function<void (const TcpConnectionPtr&)> CloseCallback;
 #endif //UNTITLED_CALLBACK_H

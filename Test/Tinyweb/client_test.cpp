@@ -27,9 +27,11 @@ int main()
             if(n>0){
                 std::cout << buf << std::endl;
             }
-          /*  while (true){
-
-            }*/
+            char bufs[1000];
+            if((n=read(fd,bufs,1000))){
+                std::cout << "bufs: " << bufs << std::endl;
+            }
+            //std::cout << "bufs: " << bufs << std::endl;
         }
     }
     close(fd);

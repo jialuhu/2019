@@ -62,6 +62,8 @@ CMakeFiles/untitled.dir/WebServer.cpp.o
  /Users/jialuhu/CLionProjects/untitled/CallBack.h
  /Users/jialuhu/CLionProjects/untitled/Channel.h
  /Users/jialuhu/CLionProjects/untitled/EventLoop.h
+ /Users/jialuhu/CLionProjects/untitled/HttpContent.h
+ /Users/jialuhu/CLionProjects/untitled/HttpRespond.h
  /Users/jialuhu/CLionProjects/untitled/InetAddr.h
  /Users/jialuhu/CLionProjects/untitled/Socket.h
  /Users/jialuhu/CLionProjects/untitled/SocketOpt.h

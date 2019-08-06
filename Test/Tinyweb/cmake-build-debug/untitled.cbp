@@ -115,6 +115,12 @@
 		<Unit filename="/Users/jialuhu/CLionProjects/untitled/EventLoop.h">
 			<Option target="untitled"/>
 		</Unit>
+		<Unit filename="/Users/jialuhu/CLionProjects/untitled/HttpContent.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="/Users/jialuhu/CLionProjects/untitled/HttpRespond.h">
+			<Option target="untitled"/>
+		</Unit>
 		<Unit filename="/Users/jialuhu/CLionProjects/untitled/InetAddr.cpp">
 			<Option target="untitled"/>
 		</Unit>

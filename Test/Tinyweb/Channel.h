@@ -30,6 +30,9 @@ public:
     void setReadCallback(EventCallBack cb){
         ReadCallback = std::move(cb);
     }
+    void setCloseCallback(EventCallBack cb){
+        CloseCallback = std::move(cb);
+    }
     //设置写回调
     void setWriteCallback(EventCallBack cb){
         WriteCallback = std::move(cb);
@@ -42,14 +45,14 @@ public:
     void enableReading(){
         std::cout << "注册可读事件\n";
         std::cout << "EVFILE_READ: " << EVFILT_READ << std::endl;
-        event_ |= EVFILT_READ;
+        event_ = EVFILT_READ;
         std::cout << "update\n";
         update();
     }
     //注册可写事件
     void enableWriting(){
         std::cout << "注册可写事件\n";
-        event_ |= EVFILT_WRITE;
+        event_ = EVFILT_WRITE;
         update();
     }
     //注册不可读写事件
@@ -57,14 +60,19 @@ public:
         isclose = true;
         update();
     }
-    //处理半关闭状态
+    //不可再写
     void disableWriting(){
-        event_ &= ~EVFILT_WRITE;
+        //event_ &= ~EVFILT_WRITE;
+       iswrite = true;
         update();
     }
 
     void set_index(int index){
         indx = index;
+    }
+
+    void set_iswrite(int is){
+        iswrite = is;
     }
 
     void set_isclose(bool ev){
@@ -73,8 +81,15 @@ public:
     void set_revent(int ev){
         revents_ = ev;
     }
+    void set_flags(int flag){
+        flags_ = flag;
+    }
+
     bool is_close(){
         return isclose;
+    }
+    bool is_write(){
+        return iswrite;
     }
     int fd(){
         return  fd_;
@@ -87,6 +102,9 @@ public:
     int event(){
         return  event_;
     }
+    int flags(){
+        return flags_;
+    }
     void handleEvent();
 private:
 
@@ -94,13 +112,16 @@ private:
     EventCallBack ReadCallback;
     EventCallBack WriteCallback;
     EventCallBack ErnnoCallback;
+    EventCallBack CloseCallback;
 
     EventLoop *eloop_;
     int fd_;
     int event_;
     bool isclose;
+    bool iswrite;
     int revents_;
     int indx;
+    int flags_;
     bool eventHanding_;
 };
 

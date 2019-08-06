@@ -15,7 +15,7 @@ class WebServer{
 public:
     WebServer(EventLoop *loop, InetAddr &addr);
     ~WebServer();
-    void onMessage(const TcpConnectionPtr &conn, Buffer *buf);
+    void onMessage(const TcpConnectionPtr &conn, Buffer &buf);
     void onConnection(const TcpConnectionPtr &conn);
     void start();
     void quit_server();
