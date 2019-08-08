@@ -72,8 +72,9 @@ void HttpContent::doit(const TcpConnectionPtr &conn, Buffer &buffer){
             std::string post;
             buffer.Buffer_str(post);
             std::string p;
-            p = post.substr(2,post.size()-3);
-            httprespond_.FillRespond_POST(conn,p.c_str());
+            std::cout<<"POST的内容: " << post << std::endl;
+            std::cout << "POST的长度: " << post.size()<<std::endl;
+            httprespond_.FillRespond_POST(conn);
         }
     }
 
@@ -111,11 +112,6 @@ void HttpContent::ParseHeader(Buffer &buffer) {
     int find_url = content.find(" ");
     std::string url;
     url = content.substr(0,find_url);
-    if(url=="POST"){
-        std::string s1;
-        buffer.Buffer_str(s1);
-        httprespond_.set_postcontent(s1);
-    }
     if(url!="GET" && url!="POST"){
         RESULT_ = BAD_REQUESTION;
         return;
@@ -142,7 +138,21 @@ HttpContent::HTTP_CODE HttpContent::analyse(const TcpConnectionPtr &conn, Buffer
     std::cout << "address of buffer: " << &buffer << std::endl;
     status_ = HEAD;
     bool flags = true;
-    while (buffer.enableRead()>=2 && flags && buffer.Buffer_find_str("\r\n",content,2)){
+    char *start = buffer.peek();
+    char *ends = buffer.peek()+buffer.readable()-4;
+    std::cout << "查看接收到的头:\n";
+    while (start!=ends){
+        std::cout << *start;
+        start++;
+    }
+    std::string judge_content;
+    buffer.Buffer_str(judge_content);
+    int find_post = judge_content.find("Content-Length: ");
+    if(find_post!=judge_content.npos){
+        int find=judge_content.find("\r\n\r\n");
+        httprespond_.set_postcontent(judge_content.substr(find+4,judge_content.size()-find-4));
+    }
+    while (buffer.readable()>=2 && flags && buffer.Buffer_find_str("\r\n",content,2)){
         std::cout<<"查看转化过来的字符串: " << content << std::endl;
         switch(status_){
             case HEAD:{
@@ -163,10 +173,6 @@ HttpContent::HTTP_CODE HttpContent::analyse(const TcpConnectionPtr &conn, Buffer
         }
         content.clear();
     }
-   // std::string s1;
-    //buffer.Buffer_str(s1);
-    //std::cout << "啊啊啊啊啊啊啊啊啊啊啊啊: " << s1 << std::endl;
-    //conn->set_Handlewrite();
     return RESULT_;
 
 }

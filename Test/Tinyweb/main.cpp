@@ -32,31 +32,14 @@ int main() {
     close(fd);
     return 0;
 }*/
-#include "Acceptor.h"
+/*#include "Acceptor.h"
 #include "EventLoop.h"
 #include "InetAddr.h"
 #include "SocketOpt.h"
 #include "TcpServer.h"
 #include <stdio.h>
-#include <iostream>
-/*void newConnection(int sockfd, InetAddr& peerAddr)
-{
-    printf("newConnection(): accepted a new connection from ");
-    int ret = ::write(sockfd, "How are you?\n", 13);
-    sleep(10);
-    ::close(sockfd);
-}
+#include <iostream>*/
 
-int main()
-{
-    printf("main(): pid = %d\n", getpid());
-    InetAddr listenAddr(8888);
-    EventLoop loop;
-    Acceptor acceptor(&loop, listenAddr);
-    acceptor.setNewConnectionCallback(newConnection);
-    acceptor.listen();
-    loop.loop();
-}*/
 int main(){
     EventLoop loop;
     InetAddr addr(8888);

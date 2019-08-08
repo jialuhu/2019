@@ -58,6 +58,7 @@ public:
     void connectEstablished();
     void Post_deal(const char* file_path, const char *argv);
     void set_Handlewrite(const char* filepath,int fd, std::string &head);
+    void set_HandleErrno(int fd, std::string &head);
 private:
     typedef boost::function<void (TcpConnection &)> ConnectionCallbacks;
     void HandleRead();
@@ -76,18 +77,16 @@ private:
     CloseCallback CloseCb_;//***************
     Buffer input_;
     std::string respond_head;
-    std::string respond_content;
+    //std::string respond_content;
     Buffer output_;
     boost::any context_;
 
-    std::string head_;
-    int fd_;
-    struct iovec *m_iv_;
-    std::string path_;
+    //std::string head_;
+    //int fd_;
+    //struct iovec *m_iv_;
+    //std::string path_;
     const char*file_path_;
     const char* argv_;
-
-    bool method_;
 
 };
 #endif //UNTITLED_TCPCONNECTION_H

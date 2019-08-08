@@ -14,9 +14,6 @@
 #include <map>
 class Buffer;
 
-/*typedef boost::function<void (const TcpConnection&)> ConnectionCallback;
-typedef boost::function<void (TcpConnection *conn, Buffer &buf)> OnMessageCallback;
-typedef boost::function<void (int fd)> CloseCallback;*/
 class TcpServer{
 public:
     explicit TcpServer(EventLoop *loop, InetAddr &listenAddr);

@@ -4,7 +4,15 @@
 #include "EventLoop.h"
 #include "Channel.h"
 #include "Kqueue.h"
-//#include <memory>
+class IgnoreSignal{
+public:
+    IgnoreSignal(){
+        ::signal(SIGPIPE,SIG_IGN);
+    }
+};
+
+IgnoreSignal ignoreSignal;
+
 thread_local EventLoop* t_loopInThisThread = nullptr;
 EventLoop ::EventLoop() :
         quit_(false),

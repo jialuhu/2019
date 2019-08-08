@@ -15,15 +15,13 @@ public:
     ~HttpRespond();
     void set_url(std::string url){
         url_ = url;
-        std::cout << "url: " << url_ << std::endl;
     }
     void set_method(std::string method){
+        std::cout <<"method_::::::: " << method << std::endl;
         method_ = method;
-        std::cout << "method: " << method_ << std::endl;
     }
     void set_version(std::string version){
         version_ = version;
-        std::cout << "version: " << version_ << std::endl;
     }
 
     void set_postcontent(std::string st){
@@ -52,21 +50,25 @@ public:
     void set_Connection(std::string Connction){
         Connection_ = Connction;
     }
-    void FillRespond_POST(const TcpConnectionPtr &conn, const char *postctent){
-        std::cout << "POST方法\n";
-        std::cout << "PPPPPPpppppppppppst: " << postctent << std::endl;
-        conn->Post_deal("/Users/jialuhu/2019/add", postctent);
+    void FillRespond_POST(const TcpConnectionPtr &conn){
+        conn->Post_deal("/Users/jialuhu/2019/add", post_content.c_str());
     }
     void FillRespond_GET(const TcpConnectionPtr &conn){
-            method_ = "/Users/jialuhu/2019"+method_;
+            if(method_=="/"){
+                method_.c_str();
+                method_ = "/Users/jialuhu/2019/hhhh.html";
+            }else{
+                method_ = "/Users/jialuhu/2019"+method_;
+            }
             std::cout << "method:^^^^^^^^^^^^^ "<< method_ << std::endl;
             int fd = open(method_.c_str(),O_RDWR);
             if(fd < 0){
                 std::string header("HTTP/1.1 404\r\n");
-                std::string content("Content-Length: 0\r\nConnection: close\r\n\r\n");
+                std::string content("Connection: close\r\n\r\n");
                 std::cout << header << content << std::endl;
-                //conn->set_Handlewrite(header, content);
+                conn->set_HandleErrno(fd, header);
                 std::cout << "打开失败\n";
+
             }
             else{
                 std::string header("HTTP/1.1 200 ok\r\nConnection: close\r\n");

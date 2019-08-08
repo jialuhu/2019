@@ -48,22 +48,16 @@ bool Kqueue::Change(Channel* channel,int fd){
         }
         channels_.erase(channel->fd());
         std::cout << "channel->event is close event:" << channel->event() << std::endl;
-        //if(channel->event()==EVFILT_WRITE){
-            EV_SET(&changes[0], fd, EVFILT_WRITE, EV_DELETE, 0, 0, NULL);
-        std::cout << "channel->event is close flags: " << channel->flags() << std::endl;
-        //}
-        //else{
-            EV_SET(&changes[0], fd, EVFILT_READ, EV_DELETE, 0, 0, NULL);
-        std::cout << "channel->event is close flags: " << channel->flags() << std::endl;
-
-
-        //}
+        //对kqueue有困惑
+        EV_SET(&changes[0], fd, EVFILT_WRITE, EV_DELETE, 0, 0, NULL);
+        //std::cout << "channel->event is close flags: " << channel->flags() << std::endl;
+        EV_SET(&changes[0], fd, EVFILT_READ, EV_DELETE, 0, 0, NULL);
+        //std::cout << "channel->event is close flags: " << channel->flags() << std::endl;
 
     } else if(channel->is_write()){//************注销写事件
         std::cout << "注销写事件\n";
         EV_SET(&changes[0], fd, EVFILT_WRITE, EV_DELETE, 0, 0, NULL);
         channel->set_iswrite(false);
-        //channel->set_revent();
     }
     else if(channel->event()==EVFILT_READ){
         EV_SET(&changes[0], fd, EVFILT_READ, EV_ADD, 0, 0, NULL);
@@ -94,26 +88,19 @@ void Kqueue::updateChannel(Channel* channel) {
         assert(channels_.find(kfd)!=channels_.end());
         assert(channels_[kfd]==channel);
         assert(idx>=0 && idx<kqfds_.size());
-        //更新事件表
         assert(Change(channel,kfd)==true);
     }
 }
 const int MAX_EVENT_COUNT = 5000;
 void Kqueue::kqueue(int timeout, std::vector<Channel*> *activeChannel){
-    std::cout << "每一次都遍历一次map:\n";
     for(auto it=channels_.begin();it!=channels_.end();it++){
         int id = it->first;
-        std::cout << "map of id: " << id << std::endl;
     }
-    //std::vector<struct kevent> krevents[MAX_EVENT_COUNT];
     struct kevent krevents[MAX_EVENT_COUNT];
-    //std::cout << "测试vector的krevents\n";
     int ret = ::kevent(kqfd, nullptr, 0, krevents, MAX_EVENT_COUNT, nullptr);
     if(ret>0) {
-        //std::cout << "ret: " << ret << std::endl;
         for (int i=0; i<ret; i++) {
             int socketfd = krevents[i].ident;
-          //  std::cout << "ident: " << krevents[i].ident << std::endl;
             int datacount = krevents[i].data;
             int setrv = krevents[i].filter;
             assert(channels_.find(socketfd) != channels_.end());

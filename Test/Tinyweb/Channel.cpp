@@ -34,17 +34,17 @@ void Channel :: handleEvent() {
     std::cout << "关闭状态: " << is_close() << std::endl;
     if((revents_ == EVFILT_READ) && !is_close()) {
         if (ReadCallback) {
-            std::cout << "有可以读的事件\n\n";
+            //std::cout << "有可以读的事件\n\n";
             ReadCallback();
-            std::cout << "有可以读的事件\n\n";
+            //std::cout << "有可以读的事件\n\n";
         }
     }
     if((revents_ == EVFILT_WRITE) && !is_close()) {
-        std::cout << "EVFILE_WRITE: " << revents_ << std::endl;
+        //std::cout << "EVFILE_WRITE: " << revents_ << std::endl;
         if (WriteCallback) {
             std::cout << "进入有写事件\n\n";
             WriteCallback();
-            std::cout << "进入有写事件\n\n";
+            //std::cout << "进入有写事件\n\n";
         }
     }
     if((flags_ == 32769) && (is_close())){
