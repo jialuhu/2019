@@ -12,6 +12,7 @@
 #include <string>
 #include <cstring>
 #include <iostream>
+#include <algorithm>
 class Buffer{
 public:
     Buffer();
@@ -27,6 +28,8 @@ public:
     }
     //read指针，从哪开始读
     const char *peek(){
+        std::cout << "$$$$$$$$$$$$$readindex_\n";
+        std::cout << readindex_ << std::endl;
         return (&*buf.begin())+readindex_;
     }
     //write指针,即从哪开始写
@@ -44,6 +47,7 @@ public:
     {
         if (enableWrite() < len)
         {
+            std::cout << "make space\n";
             makeSpace(len);
         }
         assert(enableWrite() >= len);
@@ -63,43 +67,56 @@ public:
 
     void shrink(size_t reserve)
     {
-        std::vector<char> buf(8+enableRead()+reserve);
-        std::copy(peek(), peek()+enableRead(), buf.begin()+8);
-        buf.swap(buf);
+        std::vector<char> bufs(8+enableRead()+reserve);
+        std::copy(peek(), peek()+enableRead(), bufs.begin()+8);
+        bufs.swap(buf);
+        std::cout << "###!!!!!!!!!!!!!!!\n";
     }
 
     size_t Buffer_size(){
         return buf.size();
     }
+    std::string& read_string(std::string &s1)
+    {
+        Buffer_str(s1);
+        readindex_=8;
+        writeindex_ = 8;
+        return s1;
+    }
 
     std::string &Buffer_str(std::string &s1){
         int len = writeindex_-readindex_;
-        char *str;
-        str = new char[len+1];
         s1.clear();
-        std::copy(buf.begin()+readindex_,buf.begin()+writeindex_,str);
-        s1 = s1+str;
+        for(int i=readindex_; i<=writeindex_; i++)
+        {
+            s1.push_back(buf[i]);
+        }
+        //readindex_ = writeindex_ = 8;
         return s1;
     }
 
     bool Buffer_find_str(const char *str,std::string &result,size_t len_){
-        std::cout << "读缓冲区的大小: " << enableRead() <<std::endl;
+        //std::cout << "读缓冲区的大小: " << enableRead() <<std::endl;
         std::string find_string;
         Buffer_str(find_string);
         int find = find_string.find(str)+len_;
+        if(find-len_==0){
+            return false;
+        }
         if(find != find_string.npos){
             result = find_string.substr(0, find);
+            std::cout << "string: " << result << std::endl;
             size_t len = result.size();
             readindex_+=len;
             if(!enableRead()){
                 //此时已经将数据读完
-                std::cout << "数据已经全部取出\n";
+                //std::cout << "数据已经全部取出\n";
                 readindex_ = 8;
                 writeindex_ = 8;
                 //return true;
             }
         } else{
-            result = "\0";
+            //result = "\0";
             return false;
         }
         return true;
@@ -114,6 +131,7 @@ private:
     void makeSpace(size_t len){
         if(enableWrite()+prependableBytes() < len+8){
             //空间不够挪腾，只能进行扩容
+            std::cout << "扩容\n";
             shrink(len);
 
         } else{
@@ -130,4 +148,5 @@ private:
     size_t readindex_;
     size_t writeindex_;
 };
+
 #endif //UNTITLED_BUFFER_H

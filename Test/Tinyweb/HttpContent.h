@@ -36,8 +36,9 @@ private:
     void set_status(CHECK_STATUS statu){
         status_ = statu;
     }
-    HTTP_CODE ParseHeader();//解析请求头
-    HTTP_CODE ParseRequestion();//解析请求
+
+    void ParseHeader(Buffer &buffer);//解析请求头
+    void ParseRequestion();//解析请求
     CHECK_STATUS Analyse_Status(){
         return status_;
     }
@@ -62,26 +63,63 @@ void HttpContent::doit(const TcpConnectionPtr &conn, Buffer &buffer){
             break;
         }
         case FILE_REQUESTION:{
+            httprespond_.FillRespond_GET(conn);
             std::cout << "GET请求方法\n";
             break;
         }
         case POST_FILE:{
             std::cout << "POST请求方法\n";
+            std::string post;
+            buffer.Buffer_str(post);
+            std::string p;
+            p = post.substr(2,post.size()-3);
+            httprespond_.FillRespond_POST(conn,p.c_str());
         }
     }
-     conn->set_Handlewrite();
 
 }
-HttpContent::HTTP_CODE HttpContent::ParseRequestion() {
 
-    return FILE_REQUESTION;
+void HttpContent::ParseRequestion() {
+    std::string type;
+    int find = content.find(" ");
+    type = content.substr(0,find);
+    std::string type_content;
+    if(type=="Host:"){
+        type_content = content.substr(find+1, content.size()-3);
+        std::cout << "type_content: " << type_content << std::endl;
+        httprespond_.set_Host_(type_content);
+    }
+    else if(type=="Accept-Language:"){
+        //Content-Language;
+        type_content = content.substr(find+1, content.size()-3);
+        std::cout << "Content-Language: " << type_content << std::endl;
+        httprespond_.set_ContentLanguage(type_content);
+
+    }
+    else if(type=="Connection:"){
+        type_content = content.substr(find+1, content.size()-3);
+        std::cout << "Connection: " << type_content << std::endl;
+        httprespond_.set_Connection(type_content);
+    } else{
+        std::cout << type << std::endl;
+    }
+
 }
 
 
-HttpContent::HTTP_CODE HttpContent::ParseHeader() {
+void HttpContent::ParseHeader(Buffer &buffer) {
     int find_url = content.find(" ");
     std::string url;
     url = content.substr(0,find_url);
+    if(url=="POST"){
+        std::string s1;
+        buffer.Buffer_str(s1);
+        httprespond_.set_postcontent(s1);
+    }
+    if(url!="GET" && url!="POST"){
+        RESULT_ = BAD_REQUESTION;
+        return;
+    }
     std::cout << "url: " << url << std::endl;
     httprespond_.set_url(url);
 
@@ -92,23 +130,24 @@ HttpContent::HTTP_CODE HttpContent::ParseHeader() {
 
     std::string version;
     version = content.substr(find_method+1,content.size()-find_method-3);
+    if(version!="HTTP/1.1"){
+        RESULT_ = BAD_REQUESTION;
+        return;
+    }
     httprespond_.set_version(version);
-
-    return url=="GET"?FILE_REQUESTION:POST_FILE;
+    RESULT_ = (url=="GET"?FILE_REQUESTION:POST_FILE);
 
 }
 HttpContent::HTTP_CODE HttpContent::analyse(const TcpConnectionPtr &conn, Buffer &buffer) {
     std::cout << "address of buffer: " << &buffer << std::endl;
-    //buffer.Buffer_find_str("\r\n",content);
-    std::cout<<"查看转化过来的字符串: " << content << std::endl;
     status_ = HEAD;
     bool flags = true;
-    while (buffer.enableRead() && flags && buffer.Buffer_find_str("\r\n",content,2)){
+    while (buffer.enableRead()>=2 && flags && buffer.Buffer_find_str("\r\n",content,2)){
         std::cout<<"查看转化过来的字符串: " << content << std::endl;
         switch(status_){
             case HEAD:{
                 std::cout << "解析请求行的头部\n";
-                ParseHeader();
+                ParseHeader(buffer);
                 set_status(REQUESTION);
                 break;
             }
@@ -124,6 +163,9 @@ HttpContent::HTTP_CODE HttpContent::analyse(const TcpConnectionPtr &conn, Buffer
         }
         content.clear();
     }
+   // std::string s1;
+    //buffer.Buffer_str(s1);
+    //std::cout << "啊啊啊啊啊啊啊啊啊啊啊啊: " << s1 << std::endl;
     //conn->set_Handlewrite();
     return RESULT_;
 

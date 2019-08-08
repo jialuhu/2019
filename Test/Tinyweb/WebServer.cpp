@@ -27,9 +27,9 @@ void WebServer::onMessage(const TcpConnectionPtr &conn, Buffer &buf) {
 
     //std::cout << "Address of buf: " << &buf << std::endl;
     //std::cout << "显示接收数据的大小： "<<buf.Buffer_size()<< std::endl;
-    //std::string mystring;
-   // buf.Buffer_str(mystring);
-    //std::cout << "mystring:\n" << mystring << std::endl;
+    std::string mystring;
+    buf.Buffer_str(mystring);
+    std::cout << "mystring:\n" << mystring << std::endl;
     std::cout << "WebServer::onMessage\n";
     auto &httpcontent = boost::any_cast<HttpContent&>(conn->getContext());
     httpcontent.doit(conn,buf);

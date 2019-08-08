@@ -28,7 +28,7 @@ void TcpServer::newConnection(int connfd) {
     //此处建立相对应的连接事件，并且设置读写事件
      char buf[13]={"hello"};
      countId++;
-     sprintf(buf,"%s_%d",buf,countId);
+     sprintf(buf,"%s_%d",buf,countId++);
      std::cout << "conn->name1: " << buf << std::endl;
      std::string s1(buf);
      std::cout << "conn->name2: " << s1 << std::endl;
@@ -45,4 +45,5 @@ void TcpServer::removeConnection(const TcpConnectionPtr &conn){
     std::cout << "removeConnection\n\n";
     int n = connections_.erase(conn->name());
     std::cout << "removeConnection\n\n";
+
 }

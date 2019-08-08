@@ -65,8 +65,10 @@ bool Kqueue::Change(Channel* channel,int fd){
         channel->set_iswrite(false);
         //channel->set_revent();
     }
-    else{
-        EV_SET(&changes[0], fd, channel->event(), EV_ADD, 0, 0, NULL);
+    else if(channel->event()==EVFILT_READ){
+        EV_SET(&changes[0], fd, EVFILT_READ, EV_ADD, 0, 0, NULL);
+    }else if(channel->event()==EVFILT_WRITE){
+        EV_SET(&changes[0], fd, EVFILT_WRITE, EV_ADD, 0, 0, NULL);
     }
     int ret = kevent(kqfd, changes, 1, nullptr, 0, nullptr);
     if (ret == -1) {
