@@ -24,6 +24,7 @@ int main()
         a[i + 1] += a[i] / 10;
         a[i] %= 10;
     }
+
     int r = n + m - 1;
     for (; r && !a[r]; r--);
     for (;r >= 0;--r)
