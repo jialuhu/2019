@@ -79,3 +79,54 @@ public:
         return mergeFenzhi(lists,left,right-1);
     }
 };
+
+//分治非递归
+class Solution {
+public:
+    ListNode* mergeTwoList(ListNode* l1, ListNode* l2){
+        if(l1==NULL&&l2==NULL){
+            return NULL;
+        }
+        if(l1!=NULL&&l2==NULL){
+            return l1;
+        }
+        if(l1==NULL&&l2!=NULL){
+            return l2;
+        }
+        ListNode *result = new ListNode(-1);
+        ListNode *head = result;
+        while(l1 && l2){
+            if(l1->val >= l2->val){
+                head->next = l2;
+                l2 = l2->next;
+            }else{
+                head->next = l1;
+                l1 = l1->next;
+            }
+            head = head->next;
+        }
+        if(l1){
+            head->next = l1;
+        }else{
+            head->next = l2;
+        }
+        return result->next;
+        
+    }
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        int left = 0;
+        int right = lists.size()-1;
+        if((right+1)==0){
+            return NULL;
+        }
+        while(right>0){
+            while(left < right){
+                lists[left] = mergeTwoList(lists[left], lists[right]);
+                left++;
+                right--;
+            }
+            left=0;
+        }
+        return lists[0];
+    }
+};
