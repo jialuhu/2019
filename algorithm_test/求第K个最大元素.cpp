@@ -84,11 +84,13 @@ public:
     }
     int partition(vector<int>& nums, int lo, int hi){
         int base_number = nums[lo];
-        Swap(nums[lo],nums[hi]);
+        Swap(nums[lo],nums[hi]);//此处需要将比较的基值置在最右边，最后在小于某一数值的位置前插入，才可以保证左小右大
         int base_index = lo;
         for(int i=lo; i<hi; i++){
             if(nums[i]<base_number){
-                Swap(nums[i],nums[base_index]);
+                if(i!=base_index){
+                    Swap(nums[i],nums[base_index]);
+                }
                 base_index++;
             }
         }
