@@ -66,4 +66,19 @@ public:
         }
         return a[n];
     }
+    //改进一下
+    int climbStairs(int n){
+        if(n<=2){
+            return n;
+        }
+        int left = 1;//左边保持-2的数值，就是较小的数值
+        int right = 2;//右边保持-1的数值，就是较大的数值
+        for(int i=3; i<=n; i++){
+            /*交换计算当前的左右数值*/
+            int temp = left + right;
+            left = right;
+            right = temp;
+        }
+        return right;
+    }
 };
