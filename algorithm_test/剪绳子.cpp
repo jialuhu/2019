@@ -17,15 +17,11 @@ public:
         for(int i=0; i<=number; i++){
             dp[i] = 0;
         }
-        dp[0] = 0;
-        dp[1] = 1;
-        dp[2] = 2;
-        dp[3] = 3;
         int length = 4;
         for(length=4; length<=number; length++){
             int m = 0;
             for(int l=1; l<=length/2; l++){
-                dp[length] = dp[l]*dp[length-l];
+                dp[length] = l*(length-l);
                 dp[length] = max(dp[length],m);
             }
         }
