@@ -15,13 +15,20 @@ char* mystrncpy(char* dst, const char* src, size_t n){
         dst++;
         src++;
     }
+    if(n>0){
+        while(n--){
+            *dst++ = '\0';
+        }
+    }
     *dst = '\0';
     return ret;
 }
 int main(){
     const char *src = "hello";
     char dst[6];
-    mystrncpy(dst, src, 3);
+    strncpy(dst, src, 20);
+    //mystrncpy(dst, src, 3);
+    std::cout << strlen(dst) << std::endl;
     std::cout << dst << std::endl;
     return 0;
 }
