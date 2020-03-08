@@ -27,6 +27,7 @@ public:
         return mysingleton;
     }
 };
+//懒汉模式
 class SingletonLazy{
 private:
     SingletonLazy(){
@@ -43,7 +44,7 @@ public:
         std::cout << "SingletonLazy is destoied.\n";
     }
     static std::shared_ptr<SingletonLazy> getSingletonLazy(){
-        if(mysingletonlazy==nullptr){
+        if(mysingletonlazy == nullptr){
             std::lock_guard<std::mutex> lk(mymutex);
             if(mysingletonlazy == nullptr){
                 mysingletonlazy = std::shared_ptr<SingletonLazy>(new SingletonLazy());
